@@ -107,3 +107,4 @@ def sindy_lorenz_trajectory(u0,xi,poly_order,t0,tmax,dt):
 
     return t,u
 
+def lorenz_error_trajectory()
