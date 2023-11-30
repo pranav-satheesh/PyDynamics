@@ -83,7 +83,8 @@ def lorenz_system_with_noise_gen(eta,u0,t0,tf,dt,porder,lamda,params):
 #def lorenz_system_with_noise
 
 def sindy_lorenz_model(_,uvec,xi,poly_order):
-
+    
+    
     theta_u = sindy.create_library(uvec.reshape((1,3)),poly_order)
     (m,n) = np.shape(theta_u)
     dudt = theta_u @ xi.reshape(n,3)
@@ -95,6 +96,8 @@ def sindy_lorenz_trajectory(u0,xi,poly_order,t0,tmax,dt):
 
     n = int(tmax/dt)
     t = np.linspace(start=t0,stop=tmax,num=n)
+    print(xi)
+    print(xi.shape)
     trajec = solve_ivp(fun=sindy_lorenz_model,
                        t_span=(t0,tmax),
                        y0=u0,
