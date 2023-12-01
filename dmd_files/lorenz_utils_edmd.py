@@ -1,6 +1,7 @@
 import numpy as np 
 import matplotlib.pyplot as plt
 from scipy.integrate import solve_ivp
+from scipy.integrate import odeint
 from derivative import dxdt
 
 sigma = 10
@@ -65,18 +66,55 @@ def lorenz_dt(_,u,A0,A1,A2,A3,A4,A5,A6,A7,A8):
 
     return np.hstack((dx_dt,dy_dt,dz_dt))
 
+def dudt(_,u,A):
+    r = np.array([u[0],u[1],u[2],u[0]**2,u[1]**2,u[2]**2,u[0]*u[1],u[0]*u[2],u[1]*u[2]])
+    return np.matmul(A,r)
+
 def edmd_lorenz_trajectory(u0,A,t0,tmax,dt):
 
     n = int(tmax/dt)
     t = np.linspace(start=t0,stop=tmax,num=n)
     print(A)
     print(A.shape)
-    trajec = solve_ivp(fun=lorenz_dt,
+    trajec = solve_ivp(fun=dudt,
                        t_span=(t0,tmax),
                        y0=u0,
                        t_eval=t,
-                       args=A)
+                       args=(A,))
     
     u = trajec.y.T
 
     return t,u
+
+def trial_function_eval(r, rdot):
+    # Degree one variables
+    ThetaR = r
+    ThetaRd = rdot
+
+    # Degree two variables
+
+    # x^2, xdot^2
+    ThetaR = np.vstack((ThetaR, r[0,:]**2))
+    ThetaRd = np.vstack((ThetaRd, rdot[0,:]**2))
+
+    #y^2, ydot^2
+    ThetaR = np.vstack((ThetaR, r[1,:]**2))
+    ThetaRd = np.vstack((ThetaRd, rdot[1,:]**2))
+
+    #z^2, zdot^2
+    ThetaR = np.vstack((ThetaR, r[2,:]**2))
+    ThetaRd = np.vstack((ThetaRd, rdot[2,:]**2))
+
+    #x*y, xdot*ydot
+    ThetaR = np.vstack((ThetaR, r[0,:]*r[1,:]))
+    ThetaRd = np.vstack((ThetaRd, rdot[0,:]*rdot[1,:]))
+
+    #x*z, xdot*zdot
+    ThetaR = np.vstack((ThetaR, r[0,:]*r[2,:]))
+    ThetaRd = np.vstack((ThetaRd, rdot[0,:]*rdot[2,:]))
+
+    #y*z, ydot*zdot
+    ThetaR = np.vstack((ThetaR, r[2,:]*r[1,:]))
+    ThetaRd = np.vstack((ThetaRd, rdot[2,:]*rdot[1,:]))
+    
+    return ThetaR, ThetaRd

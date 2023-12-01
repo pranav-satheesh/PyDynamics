@@ -60,17 +60,19 @@ def rossler_dt(_,u,A0,A1,A2,A3,A4,A5,A6):
 
     return np.hstack((dx_dt,dy_dt,dz_dt))
 
+def dudt(_,u,A):
+    r = np.array([u[0],u[1],u[2],u[0]**2,u[1]**2,u[2]**2,u[0]*u[1],u[0]*u[2],u[1]*u[2],1])
+    return np.matmul(A,r)
+
 def edmd_rossler_trajectory(u0,A,t0,tmax,dt):
 
     n = int(tmax/dt)
     t = np.linspace(start=t0,stop=tmax,num=n)
-    print(A)
-    print(A.shape)
-    trajec = solve_ivp(fun=rossler_dt,
+    trajec = solve_ivp(fun=dudt,
                        t_span=(t0,tmax),
                        y0=u0,
                        t_eval=t,
-                       args=A)
+                       args=(A,))
     
     u = trajec.y.T
 
