@@ -6,6 +6,7 @@ cutoff = 1e-1
 
 def trial_function_eval(r, rdot):
     # Degree one variables
+    (m,n) = r.shape
     ThetaR = r
     ThetaRd = rdot
 
@@ -36,8 +37,8 @@ def trial_function_eval(r, rdot):
     ThetaRd = np.vstack((ThetaRd, rdot[2,:]*rdot[1,:]))
     
     #Constant
-    ThetaR = np.vstack((ThetaR,np.ones((1,80000))))
-    ThetaRd = np.vstack((ThetaRd,np.ones((1,80000))))
+    ThetaR = np.vstack((ThetaR,np.ones((1,n))))
+    ThetaRd = np.vstack((ThetaRd,np.ones((1,n))))
     
     return ThetaR, ThetaRd
 

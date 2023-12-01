@@ -46,7 +46,7 @@ def generate_noisy_data(eta,u0,t0,tmax,dt,params):
     u = gen_u(t,u0,params[0],params[1],params[2])
     uprime = finite_diff(u,t)
 
-    uprime + eta * np.random.randn()
+    uprime = uprime + eta * np.random.randn()
     return (t,u,uprime)
 
 

@@ -46,7 +46,7 @@ def generate_noisy_data(eta,u0,t0,tmax,dt,params):
     u = gen_u(t,u0,params[0],params[1],params[2])
     uprime = finite_diff(u,t)
 
-    uprime + eta * np.random.randn()
+    uprime = uprime + eta * np.random.randn()
     return (t,u,uprime)
 
 def rossler_system_gen(u0,t0,tf,dt,porder,lamda,params):
@@ -56,7 +56,7 @@ def rossler_system_gen(u0,t0,tf,dt,porder,lamda,params):
     Xi = sindy.sparse_regress_find(U,Uprime,porder,lamda,iter)
     return (t,U,Xi)
 
-def lorenz_system_with_noise_gen(eta,u0,t0,tf,dt,porder,lamda,params):
+def rossler_system_with_noise_gen(eta,u0,t0,tf,dt,porder,lamda,params):
 
     iter = 100
     t,U,Uprime = generate_noisy_data(eta,u0,t0,tf,dt,params)
